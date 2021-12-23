@@ -23,14 +23,21 @@ const App = () => {
   const handleAddTodo = (e) => {
     e.preventDefault();
 
-    setTodos([ ...todos, {
-      id: todos.length + 1,
-      title: title,
-      status: status,
-      body: body
-    }])
+    if (title && status && body) {
+      setTodos([ ...todos, {
+        id: todos.length + 1,
+        title: title,
+        status: status,
+        body: body
+      }]);
+    } else {
+      setTodos([ ...todos ]);
+    }
+
+    setTitle("");
+    setStatus("");
+    setBody("");
   }
-  console.log(todos)
 
   return (
     <>
@@ -50,10 +57,10 @@ const App = () => {
         <div className="input-status form-group">
           <label className="h5 m-2" htmlFor="addTodo">ステータス</label>
           <select className="form-select" value={status} onChange={handleSelectStatus}>
-            <option value="none">--select one status--</option>
-            <option value="do">着手予定</option>
-            <option value="doing">着手</option>
-            <option value="done">完了</option>
+            <option value="">--select one status--</option>
+            <option value="着手予定">着手予定</option>
+            <option value="着手">着手</option>
+            <option value="完了">完了</option>
           </select>
         </div>
         <div className="input-body form-group">
@@ -75,15 +82,21 @@ const App = () => {
             <th>タイトル</th>
             <th>ステータス</th>
             <th>詳細</th>
+            <th></th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-          </tr>
+          {todos.map((todo, index) => (
+            <tr key={index}>
+              <td>{todo.id}</td>
+              <td>{todo.title}</td>
+              <td>{todo.status}</td>
+              <td>{todo.body}</td>
+              <td><button className="btn btn-danger">削除</button></td>
+              <td><button className="btn btn-primary">編集</button></td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>
