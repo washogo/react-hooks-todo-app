@@ -24,19 +24,25 @@ const App = () => {
     e.preventDefault();
 
     if (title && status && body) {
-      setTodos([ ...todos, {
-        id: todos.length + 1,
+      const length = todos.length
+      setTodos([ ...todos,
+        {
+        id : length === 0 ? 1 : length + 1,
         title: title,
         status: status,
         body: body
-      }]);
-    } else {
-      setTodos([ ...todos ]);
-    }
+        }]);
+      } else {
+        setTodos([ ...todos ]);
+      }
 
     setTitle("");
     setStatus("");
     setBody("");
+  }
+
+  const handleClickDelete = (id) => {
+    setTodos(todos.filter(todo => todo.id !== id));
   }
 
   return (
@@ -93,7 +99,7 @@ const App = () => {
               <td>{todo.title}</td>
               <td>{todo.status}</td>
               <td>{todo.body}</td>
-              <td><button className="btn btn-danger">削除</button></td>
+              <td><button className="btn btn-danger" onClick={() => handleClickDelete(todo.id)}>削除</button></td>
               <td><button className="btn btn-primary">編集</button></td>
             </tr>
           ))}
