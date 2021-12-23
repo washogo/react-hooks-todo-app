@@ -54,7 +54,7 @@ const App = () => {
             onChange={handleInputBody}
           />
         </div>
-        <button className="btn btn-success m-2">Add Todo</button>
+        <button className="btn btn-success my-2">Add Todo</button>
       </form>
       <table className="table table-dark">
         <thead>
