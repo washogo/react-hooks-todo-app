@@ -1,12 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const App = () => {
-  const [title, setTitle] = useState("")
-  const [status, setStatus] = useState("")
-  const [body, setBody] = useState("")
-  const [todos, setTodos] = useState([])
+  const [title, setTitle] = useState("");
+  const [status, setStatus] = useState("");
+  const [body, setBody] = useState("");
+  const [todos, setTodos] = useState(() => {
+    const initialState = localStorage.getItem("todos");
+    return JSON.parse(initialState);
+  });
+
+  useEffect(() => {
+    localStorage.setItem("todos", JSON.stringify(todos))
+  }, [todos])
 
   const handleInputTitle = (e) => {
     setTitle(e.target.value);
