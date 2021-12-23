@@ -20,6 +20,18 @@ const App = () => {
     setBody(e.target.value);
   }
 
+  const handleAddTodo = (e) => {
+    e.preventDefault();
+
+    setTodos([ ...todos, {
+      id: todos.length + 1,
+      title: title,
+      status: status,
+      body: body
+    }])
+  }
+  console.log(todos)
+
   return (
     <>
     <div className="container">
@@ -54,7 +66,7 @@ const App = () => {
             onChange={handleInputBody}
           />
         </div>
-        <button className="btn btn-success my-2">Add Todo</button>
+        <button className="btn btn-success my-2" onClick={handleAddTodo}>Add Todo</button>
       </form>
       <table className="table table-dark">
         <thead>
@@ -65,7 +77,14 @@ const App = () => {
             <th>詳細</th>
           </tr>
         </thead>
-        <tbody></tbody>
+        <tbody>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+        </tbody>
       </table>
     </div>
     </>
