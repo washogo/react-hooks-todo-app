@@ -1,55 +1,40 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useReducer } from "react";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
+import reducer from "../reducers/reducer"
+
 const App = () => {
+  const [states, dispatch] = useReducer(reducer, [])
   const [title, setTitle] = useState("");
   const [status, setStatus] = useState("");
   const [body, setBody] = useState("");
-  const [todos, setTodos] = useState(() => {
-    const initialState = localStorage.getItem("todos");
-    return JSON.parse(initialState);
-  });
-
-  useEffect(() => {
-    localStorage.setItem("todos", JSON.stringify(todos))
-  }, [todos])
-
-  const handleInputTitle = (e) => {
-    setTitle(e.target.value);
-  }
-
-  const handleSelectStatus = (e) => {
-    setStatus(e.target.value);
-  }
-
-  const handleInputBody = (e) => {
-    setBody(e.target.value);
-  }
 
   const handleAddTodo = (e) => {
     e.preventDefault();
 
     if (title && status && body) {
-      const length = todos.length
-      setTodos([ ...todos,
-        {
-        id : length === 0 ? 1 : length + 1,
-        title: title,
-        status: status,
-        body: body
-        }]);
-      } else {
-        setTodos([ ...todos ]);
-      }
+      dispatch({
+        type: "ADD_TODO",
+        title,
+        status,
+        body
+      })
+    } else {
+      return []
+    }
 
     setTitle("");
     setStatus("");
     setBody("");
   }
 
-  const handleClickDelete = (id) => {
-    setTodos(todos.filter(todo => todo.id !== id));
+  const handleDeleteTodo = (todo) => {
+    const id = todo.id
+    dispatch({
+      type: "DELETE_TODO",
+      id: id
+    })
   }
 
   return (
@@ -64,12 +49,12 @@ const App = () => {
             id="addTitle"
             placeholder="input title"
             value={title}
-            onChange={handleInputTitle}
+            onChange={(e) => setTitle(e.target.value)}
           />
         </div>
         <div className="input-status form-group">
           <label className="h5 m-2" htmlFor="addTodo">ステータス</label>
-          <select className="form-select" value={status} onChange={handleSelectStatus}>
+          <select className="form-select" value={status} onChange={(e) => setStatus(e.target.value)}>
             <option value="">--select one status--</option>
             <option value="着手予定">着手予定</option>
             <option value="着手">着手</option>
@@ -83,7 +68,7 @@ const App = () => {
             id="addBody"
             placeholder="input Body"
             value={body}
-            onChange={handleInputBody}
+            onChange={(e) => setBody(e.target.value)}
           />
         </div>
         <button className="btn btn-success my-2" onClick={handleAddTodo}>Add Todo</button>
@@ -100,13 +85,13 @@ const App = () => {
           </tr>
         </thead>
         <tbody>
-          {todos.map((todo, index) => (
+          {states.map((todo, index) => (
             <tr key={index}>
               <td>{todo.id}</td>
               <td>{todo.title}</td>
               <td>{todo.status}</td>
               <td>{todo.body}</td>
-              <td><button className="btn btn-danger" onClick={() => handleClickDelete(todo.id)}>削除</button></td>
+              <td><button className="btn btn-danger" onClick={() => handleDeleteTodo(todo)}>削除</button></td>
               <td><button className="btn btn-primary">編集</button></td>
             </tr>
           ))}
