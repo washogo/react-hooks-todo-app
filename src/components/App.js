@@ -4,8 +4,12 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 import reducer from "../reducers/reducer"
 
+
 const App = () => {
-  const [states, dispatch] = useReducer(reducer, [])
+  const result = localStorage.getItem("todos");
+  const initialStates = result ? JSON.parse(result) : []
+  
+  const [states, dispatch] = useReducer(reducer, initialStates)
   const [title, setTitle] = useState("");
   const [status, setStatus] = useState("");
   const [body, setBody] = useState("");
@@ -17,6 +21,10 @@ const App = () => {
   
   
   const [isEdit, setIsEdit] = useState(false);
+
+  useEffect(() => {
+    localStorage.setItem("todos", JSON.stringify(states))
+  }, [states])
 
   const handleAddTodo = (e) => {
     e.preventDefault();
@@ -150,30 +158,33 @@ const App = () => {
       </form>
     </div>
     )}
-    <table className="table table-dark">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>タイトル</th>
-          <th>ステータス</th>
-          <th>詳細</th>
-          <th></th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        {states.map((todo, index) => (
-          <tr key={index}>
-            <td>{todo.id}</td>
-            <td>{todo.title}</td>
-            <td>{todo.status}</td>
-            <td>{todo.body}</td>
-            <td><button className="btn btn-danger" onClick={() => handleDeleteTodo(todo)}>削除</button></td>
-            <td><button className="btn btn-primary" onClick={() => onClickEditButton(todo)}>編集</button></td>
+    <div className="container">
+      <table className="table table-dark">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>タイトル</th>
+            <th>ステータス</th>
+            <th>詳細</th>
+            <th></th>
+            <th></th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {states.map((todo, index) => (
+            <tr key={index}>
+              <td>{todo.id}</td>
+              <td>{todo.title}</td>
+              <td>{todo.status}</td>
+              <td>{todo.body}</td>
+              <td><button className="btn btn-danger" onClick={() => handleDeleteTodo(todo)}>削除</button></td>
+              <td><button className="btn btn-primary" onClick={() => onClickEditButton(todo)}>編集</button></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    
     </>
   );
 }
