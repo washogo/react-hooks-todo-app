@@ -10,6 +10,8 @@ const reducer = (states=[], action) => {
       }]
     case "DELETE_TODO":
       return states.filter(todo => todo.id !== action.id)
+    case "EDIT_TODO":
+      return states
     default:
       return states
   }
