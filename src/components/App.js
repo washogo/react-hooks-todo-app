@@ -6,15 +6,16 @@ import reducer from "../reducers/reducer"
 
 const App = () => {
   const [states, dispatch] = useReducer(reducer, [])
-  
   const [title, setTitle] = useState("");
   const [status, setStatus] = useState("");
   const [body, setBody] = useState("");
   
+  const [currentTodo, setCurrentTodo] = useState({});
   const [currentTitle, setCurrentTitle] = useState("");
   const [currentStatus, setCurrentStatus] = useState("");
   const [currentBody, setCurrentBody] = useState("");
-
+  
+  
   const [isEdit, setIsEdit] = useState(false);
 
   const handleAddTodo = (e) => {
@@ -43,11 +44,33 @@ const App = () => {
     })
   }
 
-  const handleEditTodo = (todo) => {
+  const onClickEditButton = (todo) => {
     setIsEdit(true);
     setCurrentTitle(todo.title);
     setCurrentStatus(todo.status);
     setCurrentBody(todo.body);
+    
+    setCurrentTodo({
+      ...currentTodo,
+      id: todo.id,
+      title: currentTitle,
+      status: currentStatus,
+      body: currentBody
+    });
+  }
+
+  const handleAddCurrentTodo = (e) => {
+    e.preventDefault();
+
+    dispatch({
+      type: "EDIT_TODO",
+      id: currentTodo.id,
+      title: currentTitle,
+      status: currentStatus,
+      body: currentBody
+    });
+
+    setIsEdit(false);
   }
 
   return (
@@ -86,7 +109,7 @@ const App = () => {
             onChange={(e) => setCurrentBody(e.target.value)}
           />
         </div>
-        <button className="btn btn-success my-2" onClick={handleAddTodo}>Add Todo</button>
+        <button className="btn btn-success my-2" onClick={handleAddCurrentTodo}>Edit Todo</button>
       </form>
     </div>
     ) : (
@@ -146,7 +169,7 @@ const App = () => {
             <td>{todo.status}</td>
             <td>{todo.body}</td>
             <td><button className="btn btn-danger" onClick={() => handleDeleteTodo(todo)}>削除</button></td>
-            <td><button className="btn btn-primary" onClick={() => handleEditTodo(todo)}>編集</button></td>
+            <td><button className="btn btn-primary" onClick={() => onClickEditButton(todo)}>編集</button></td>
           </tr>
         ))}
       </tbody>

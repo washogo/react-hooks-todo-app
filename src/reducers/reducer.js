@@ -11,7 +11,10 @@ const reducer = (states=[], action) => {
     case "DELETE_TODO":
       return states.filter(todo => todo.id !== action.id)
     case "EDIT_TODO":
-      return states
+      const editTodo = {id: action.id, title: action.title, status: action.status, body: action.body}
+      return states.map(todo =>
+        todo.id === action.id ? editTodo : todo
+      );
     default:
       return states
   }
