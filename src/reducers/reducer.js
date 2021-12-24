@@ -1,6 +1,8 @@
+import { ADD_TODO, DELETE_TODO, EDIT_TODO} from "../actions";
+
 const reducer = (states=[], action) => {
   switch (action.type) {
-    case "ADD_TODO":
+    case ADD_TODO:
       const todo = {title: action.title, status: action.status, body: action.body}
       const length = states.length
       const id = length === 0 ? 1 : states[length - 1].id + 1
@@ -8,9 +10,9 @@ const reducer = (states=[], action) => {
         id: id,
         ...todo
       }]
-    case "DELETE_TODO":
+    case DELETE_TODO:
       return states.filter(todo => todo.id !== action.id)
-    case "EDIT_TODO":
+    case EDIT_TODO:
       const editTodo = {id: action.id, title: action.title, status: action.status, body: action.body}
       return states.map(todo =>
         todo.id === action.id ? editTodo : todo
